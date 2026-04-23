@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>my pick. ⭐︎ 制作状況チェック</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Fredoka:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pop-pink: #ff3f8a;
+    --hot-pink: #ff6ba9;
+    --candy: #ffb3cc;
+    --sugar: #ffe8f0;
+    --cream: #fff5f8;
+    --mint: #5dd4dd;
+    --mint-deep: #3bb8c2;
+    --sunny: #ffd84d;
+    --grape: #b399ff;
+    --lemon: #fff8c4;
+    --ink: #2a1a2e;
+    --ink-soft: #5a3a5e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Zen Kaku Gothic New', 'Fredoka', sans-serif;
+    font-weight: 500;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ========== 背景 ========== */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255, 107, 169, 0.25), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 85% 30%, rgba(93, 212, 221, 0.22), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 40% 100%, rgba(179, 153, 255, 0.2), transparent 60%),
+      linear-gradient(180deg, #fff5f8 0%, #ffe8f0 100%);
+  }
+
+  .bg-grid {
+    position: fixed; inset: 0; z-index: -1;
+    background-image:
+      linear-gradient(rgba(255, 107, 169, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 107, 169, 0.06) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  /* ふわふわ装飾 */
+  .float-deco {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    font-size: 28px;
+    animation: float 6s ease-in-out infinite;
+  }
+  .float-deco:nth-child(1) { top: 8%; left: 6%; animation-delay: 0s; }
+  .float-deco:nth-child(2) { top: 14%; right: 8%; animation-delay: 1.5s; font-size: 22px; }
+  .float-deco:nth-child(3) { top: 50%; left: 3%; animation-delay: 3s; font-size: 18px; }
+  .float-deco:nth-child(4) { top: 68%; right: 5%; animation-delay: 2s; font-size: 32px; }
+  .float-deco:nth-child(5) { bottom: 10%; left: 10%; animation-delay: 0.8s; font-size: 20px; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  /* ========== レイアウト ========== */
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ========== ヘッダー ========== */
+  .brand {
+    text-align: center;
+    margin-bottom: 36px;
+    position: relative;
+  }
+
+  .brand-logo {
+    display: inline-block;
+    position: relative;
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--pop-pink) 0%, var(--hot-pink) 100%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow:
+      0 8px 24px rgba(255, 63, 138, 0.3),
+      inset 0 2px 8px rgba(255, 255, 255, 0.3);
+    transform: rotate(-3deg);
+  }
+
+  .brand-logo::before,
+  .brand-logo::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    background: var(--sunny);
+    border-radius: 50%;
+    border: 3px solid var(--ink);
+  }
+  .brand-logo::before { top: -8px; left: -12px; }
+  .brand-logo::after { bottom: -8px; right: -12px; background: var(--mint); }
+
+  .brand-logo h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 48px;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow:
+      -2px -2px 0 var(--ink),
+      2px -2px 0 var(--ink),
+      -2px 2px 0 var(--ink),
+      2px 2px 0 var(--ink),
+      4px 4px 0 rgba(42, 26, 46, 0.3);
+    line-height: 1;
+  }
+
+  .brand-tag {
+    margin-top: 18px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+
+  .brand-subtag {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  /* ========== 全体進捗バナー ========== */
+  .stats {
+    background: #fff;
+    border: 3px solid var(--ink);
+    border-radius: 24px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+  }
+
+  .stats::before {
+    content: '✦';
+    position: absolute;
+    top: -12px; left: 24px;
+    background: var(--sunny);
+    color: var(--ink);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 3px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .stats-left {
+    flex: 1;
+  }
+
+  .stats-label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+
+  .stats-value {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--pop-pink);
+    line-height: 1;
+    margin-top: 4px;
+  }
+
+  .stats-bar {
+    flex: 1.4;
+    height: 14px;
+    background: var(--sugar);
+    border: 2px solid var(--ink);
+    border-radius: 100px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .stats-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--mint) 0%, var(--pop-pink) 50%, var(--grape) 100%);
+    border-radius: 100px;
+    transition: width 1.4s cubic-bezier(0.34, 1.3, 0.64, 1);
+    position: relative;
+  }
+
+  .stats-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 4px,
+      rgba(255, 255, 255, 0.3) 4px,
+      rgba(255, 255, 255, 0.3) 8px
+    );
+    animation: slide 2s linear infinite;
+  }
+
+  @keyframes slide {
+    0% { background-position: 0 0; }
+    100% { background-position: 16px 0; }
+  }
+
+  /* ========== 検索カード ========== */
+  .search-card {
+    background: #fff;
+    border: 3px solid var(--ink);
+    border-radius: 32px;
+    padding: 32px 28px 28px;
+    box-shadow: 8px 8px 0 var(--ink);
+    position: relative;
+    margin-bottom: 32px;
+  }
+
+  .search-card::before {
+    content: '✦ order check ✦';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--sunny);
+    padding: 6px 18px;
+    border-radius: 100px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .search-title {
+    text-align: center;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .search-title span {
+    color: var(--pop-pink);
+  }
+
+  .search-desc {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .field label {
+    display: block;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding-left: 6px;
+  }
+
+  .field label::before {
+    content: '♡ ';
+    color: var(--pop-pink);
+  }
+
+  .field input {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 500;
+    background: var(--sugar);
+    border: 2.5px solid var(--ink);
+    border-radius: 16px;
+    color: var(--ink);
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .field input::placeholder {
+    color: rgba(42, 26, 46, 0.35);
+  }
+
+  .field input:focus {
+    background: var(--lemon);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--pop-pink);
+  }
+
+  .field-hint {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    padding-left: 6px;
+  }
+
+  /* 月ボタン */
+  .month-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .month-loading {
+    color: var(--ink-soft);
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .month-btn {
+    padding: 10px 18px;
+    background: #fff;
+    color: var(--ink);
+    border: 2.5px solid var(--ink);
+    border-radius: 100px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  .month-btn:hover {
+    background: var(--sugar);
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .month-btn.active {
+    background: var(--pop-pink);
+    color: #fff;
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+
+  .month-btn.active::before {
+    content: '♡ ';
+  }
+
+  .btn-check {
+    width: 100%;
+    margin-top: 10px;
+    padding: 18px;
+    background: var(--ink);
+    color: var(--sunny);
+    border: 3px solid var(--ink);
+    border-radius: 100px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-check:hover {
+    background: var(--pop-pink);
+    color: #fff;
+    transform: translate(-3px, -3px);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .btn-check:active {
+    transform: translate(0, 0);
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  .btn-check:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .btn-check .sparkle {
+    display: inline-block;
+    animation: sparkle 1.2s ease-in-out infinite;
+  }
+
+  @keyframes sparkle {
+    0%, 100% { transform: scale(1) rotate(0); opacity: 1; }
+    50% { transform: scale(1.3) rotate(180deg); opacity: 0.7; }
+  }
+
+  /* ========== 結果 ========== */
+  .result {
+    display: none;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .result.show { display: block; }
+
+  .result-head {
+    background: linear-gradient(135deg, var(--pop-pink) 0%, var(--hot-pink) 100%);
+    border: 3px solid var(--ink);
+    border-radius: 28px;
+    padding: 28px 24px;
+    color: #fff;
+    box-shadow: 8px 8px 0 var(--ink);
+    text-align: center;
+    position: relative;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+
+  .result-head::before {
+    content: '';
+    position: absolute;
+    inset: -20% -20% auto auto;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, var(--sunny) 0%, transparent 70%);
+    opacity: 0.4;
+  }
+
+  .result-greeting {
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    letter-spacing: 1px;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+  }
+
+  .result-name {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900;
+    font-size: 28px;
+    margin: 6px 0 18px;
+    text-shadow: 2px 2px 0 rgba(42, 26, 46, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .result-summary {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .summary-chip {
+    background: #fff;
+    color: var(--ink);
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 2.5px solid var(--ink);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    box-shadow: 3px 3px 0 rgba(42, 26, 46, 0.4);
+  }
+
+  .summary-chip.hot {
+    background: var(--sunny);
+  }
+
+  .summary-chip.done {
+    background: var(--mint);
+  }
+
+  /* ========== 注文カード ========== */
+  .orders {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .order {
+    background: #fff;
+    border: 3px solid var(--ink);
+    border-radius: 24px;
+    padding: 22px;
+    box-shadow: 6px 6px 0 var(--ink);
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+
+  .order:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+
+  .order-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+
+  .order-no {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .order-no strong {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--ink);
+    display: block;
+    margin-top: 4px;
+    word-break: break-all;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+
+  .order-status {
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border: 2.5px solid var(--ink);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .order-status.done {
+    background: var(--mint);
+    color: var(--ink);
+  }
+
+  .order-status.making {
+    background: var(--sunny);
+    color: var(--ink);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+  }
+
+  .order-memo {
+    background: var(--sugar);
+    border: 2px dashed var(--candy);
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  .order-memo-label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--pop-pink);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .order-dates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .date-item {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+
+  .date-label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    display: block;
+  }
+
+  .date-value {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink);
+    margin-top: 2px;
+  }
+
+  .date-value.highlight {
+    color: var(--pop-pink);
+  }
+
+  .order-month-badge {
+    background: var(--grape);
+    color: #fff;
+    border: 2.5px solid var(--ink);
+    border-radius: 16px;
+    padding: 8px 16px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  .order-month-label {
+    display: block;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.9;
+    line-height: 1;
+  }
+
+  .order-month-badge strong {
+    display: block;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    margin-top: 2px;
+    line-height: 1;
+  }
+
+  /* ========== メッセージ ========== */
+  .message {
+    display: none;
+    background: #fff;
+    border: 3px solid var(--ink);
+    border-radius: 24px;
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: 6px 6px 0 var(--ink);
+    animation: popIn 0.4s ease;
+  }
+  .message.show { display: block; }
+
+  .message.error {
+    background: var(--lemon);
+  }
+
+  .message-icon {
+    font-size: 40px;
+    margin-bottom: 8px;
+    display: inline-block;
+    animation: wiggle 2s ease-in-out infinite;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  .message-title {
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .message-text {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  /* ========== ローダー ========== */
+  .loader {
+    display: none;
+    text-align: center;
+    padding: 30px;
+  }
+  .loader.show { display: block; }
+
+  .loader-dots {
+    display: inline-flex;
+    gap: 8px;
+  }
+
+  .loader-dots span {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--pop-pink);
+    animation: bounce 0.6s ease-in-out infinite;
+  }
+  .loader-dots span:nth-child(2) {
+    background: var(--sunny);
+    animation-delay: 0.15s;
+  }
+  .loader-dots span:nth-child(3) {
+    background: var(--mint);
+    animation-delay: 0.3s;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+
+  .loader-text {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    margin-top: 12px;
+    text-transform: uppercase;
+  }
+
+  /* ========== フッター ========== */
+  .footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-family: 'Fredoka', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .footer::before {
+    content: '♡ ♡ ♡';
+    display: block;
+    color: var(--pop-pink);
+    font-size: 14px;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+  }
+
+  /* ========== レスポンシブ ========== */
+  @media (max-width: 480px) {
+    .brand-logo h1 { font-size: 38px; }
+    .wrap { padding: 28px 16px 60px; }
+    .stats { flex-direction: column; gap: 12px; align-items: stretch; }
+    .stats-bar { width: 100%; }
+    .search-card { padding: 28px 20px 24px; }
+    .result-head { padding: 22px 18px; }
+    .result-name { font-size: 22px; }
+    .order { padding: 18px; }
+    .order-top { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-grid"></div>
+
+<!-- 浮遊装飾 -->
+<div class="float-deco">♡</div>
+<div class="float-deco">✦</div>
+<div class="float-deco">⭑</div>
+<div class="float-deco">♡</div>
+<div class="float-deco">✧</div>
+
+<div class="wrap">
+
+  <!-- ブランドヘッダー -->
+  <div class="brand">
+    <div class="brand-logo">
+      <h1>my pick.</h1>
+    </div>
+    <div class="brand-tag">oshi-katsu goods</div>
+    <div class="brand-subtag">推し色でそろえる、わたしのおまもり</div>
+  </div>
+
+  <!-- 全体進捗 -->
+  <div class="stats">
+    <div class="stats-left">
+      <div class="stats-label">Today's progress</div>
+      <div class="stats-value" id="statsValue">--%</div>
+    </div>
+    <div class="stats-bar">
+      <div class="stats-fill" id="statsFill"></div>
+    </div>
+  </div>
+
+  <!-- 検索カード -->
+  <div class="search-card">
+    <div class="search-desc">
+      お名前を入れて、推しグッズの制作状況をチェック♡
+    </div>
+
+    <div class="field">
+      <label>Your name / お名前（フルネーム）</label>
+      <input type="text" id="nameInput" placeholder="例 : 山田花子" autocomplete="off">
+      <div class="field-hint">BASEご注文時のお名前を入れてね</div>
+    </div>
+
+    <div class="field">
+      <label>Purchase Month / 購入月を選んでね</label>
+      <div class="month-buttons" id="monthButtons">
+        <div class="month-loading">読み込み中...</div>
+      </div>
+      <div class="field-hint">
+        どの月に注文したか選んでね♡<br>
+        <span style="color:var(--pop-pink);font-weight:700;">過去の履歴は月を切り替えて確認できます</span>
+      </div>
+    </div>
+
+    <button class="btn-check" id="btnCheck">
+      <span class="sparkle">✦</span> check my order <span class="sparkle">✦</span>
+    </button>
+  </div>
+
+  <!-- ローダー -->
+  <div class="loader" id="loader">
+    <div class="loader-dots"><span></span><span></span><span></span></div>
+    <div class="loader-text">checking...</div>
+  </div>
+
+  <!-- メッセージ -->
+  <div class="message" id="message">
+    <div class="message-icon" id="msgIcon">♡</div>
+    <div class="message-title" id="msgTitle"></div>
+    <div class="message-text" id="msgText"></div>
+  </div>
+
+  <!-- 結果 -->
+  <div class="result" id="result">
+    <div class="result-head">
+      <div class="result-greeting">hi there ♡</div>
+      <div class="result-name" id="resultName">—</div>
+      <div class="result-summary">
+        <div class="summary-chip hot"><span id="totalCount">0</span> orders</div>
+        <div class="summary-chip done">done <span id="doneCount">0</span></div>
+        <div class="summary-chip"><span id="percentValue">0</span>%</div>
+      </div>
+    </div>
+
+    <div class="orders" id="ordersList"></div>
+  </div>
+
+  <!-- フッター -->
+  <div class="footer">
+    my pick. × oshi katsu goods
+  </div>
+
+</div>
+
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbw_uhAS__mkwTRXIChGU10V43CrxcR4tszSsbWqI5GoXUk2OX5_PcLjwmMZfYRRP4n5/exec';
+  const BRAND = 'mypick';
+
+  const nameInput = document.getElementById('nameInput');
+  const btnCheck = document.getElementById('btnCheck');
+  const loader = document.getElementById('loader');
+  const message = document.getElementById('message');
+  const result = document.getElementById('result');
+  const monthButtons = document.getElementById('monthButtons');
+
+  let selectedMonth = null; // 選択中の月
+
+  // 全体進捗取得
+  async function loadProgress() {
+    try {
+      const res = await fetch(`${API_URL}?type=progress&brand=${BRAND}`);
+      const data = await res.json();
+      if (data.status === 'ok') {
+        const pct = data.percent || 0;
+        document.getElementById('statsValue').textContent = `${pct}%`;
+        setTimeout(() => {
+          document.getElementById('statsFill').style.width = `${pct}%`;
+        }, 300);
+      }
+    } catch (e) {
+      console.error('progress load error', e);
+    }
+  }
+
+  // 月リスト取得＆ボタン生成
+  async function loadMonths() {
+    try {
+      const res = await fetch(`${API_URL}?type=months&brand=${BRAND}`);
+      const data = await res.json();
+      
+      if (data.status === 'ok' && data.months && data.months.length > 0) {
+        monthButtons.innerHTML = '';
+        data.months.forEach((m, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'month-btn';
+          btn.type = 'button';
+          btn.textContent = m;
+          btn.dataset.month = m;
+          // 最初の月（最新月）をデフォルト選択
+          if (idx === 0) {
+            btn.classList.add('active');
+            selectedMonth = m;
+          }
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedMonth = m;
+          });
+          monthButtons.appendChild(btn);
+        });
+      } else {
+        monthButtons.innerHTML = '<div class="month-loading">データがまだないよ</div>';
+      }
+    } catch (e) {
+      console.error('months load error', e);
+      monthButtons.innerHTML = '<div class="month-loading">読み込み失敗...リロードしてね</div>';
+    }
+  }
+
+  // 注文検索
+  async function checkOrder() {
+    const name = nameInput.value.trim();
+
+    if (!name) {
+      showMessage('♡', 'お名前を入れてね', 'フルネームで入れると見つけやすいよ');
+      return;
+    }
+
+    if (!selectedMonth) {
+      showMessage('📅', '購入月を選んでね', 'いつ注文したか選択してから検索してね♡');
+      return;
+    }
+
+    hideAll();
+    loader.classList.add('show');
+    btnCheck.disabled = true;
+
+    try {
+      const url = `${API_URL}?brand=${BRAND}&name=${encodeURIComponent(name)}&month=${encodeURIComponent(selectedMonth)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      loader.classList.remove('show');
+      btnCheck.disabled = false;
+
+      if (data.status === 'ok') {
+        showResult(data);
+      } else if (data.status === 'not_found') {
+        showMessage('🔍', `${selectedMonth}のご注文が見つからないよ...`, 'お名前が正しいか確認してみてね。<br>違う月も試してみて♡<br><span style="color:var(--pop-pink);font-weight:700;">別の月のボタンを押して再検索！</span>');
+      } else {
+        showMessage('⚠️', 'うまく取得できなかったよ', 'もう一度試してみてね');
+      }
+    } catch (err) {
+      loader.classList.remove('show');
+      btnCheck.disabled = false;
+      showMessage('⚠️', '通信エラー', 'ネット環境を確認してもう一度お試しください');
+    }
+  }
+
+  function hideAll() {
+    result.classList.remove('show');
+    message.classList.remove('show');
+  }
+
+  function showMessage(icon, title, text) {
+    hideAll();
+    document.getElementById('msgIcon').textContent = icon;
+    document.getElementById('msgTitle').textContent = title;
+    document.getElementById('msgText').innerHTML = text;
+    message.classList.add('show');
+  }
+
+  function showResult(data) {
+    document.getElementById('resultName').textContent = data.customerName + ' さん';
+    document.getElementById('totalCount').textContent = data.totalCount;
+    document.getElementById('doneCount').textContent = data.doneCount;
+    document.getElementById('percentValue').textContent = data.percent;
+
+    const list = document.getElementById('ordersList');
+    list.innerHTML = '';
+
+    data.orders.forEach((o, idx) => {
+      const card = document.createElement('div');
+      card.className = 'order';
+      card.style.animationDelay = `${idx * 0.08}s`;
+
+      const statusClass = o.done ? 'done' : 'making';
+      const statusIcon = o.done ? '✓' : '◉';
+      const statusLabel = o.done ? '制作済み' : 'making ♡';
+      const shipLabel = o.done ? '発送予定' : '発送予定';
+
+      card.innerHTML = `
+        <div class="order-top">
+          <div class="order-month-badge">
+            <span class="order-month-label">purchase</span>
+            <strong>${escapeHtml(o.sheetName || '')}</strong>
+          </div>
+          <div class="order-status ${statusClass}">
+            ${statusIcon} ${statusLabel}
+          </div>
+        </div>
+
+        ${o.memo ? `
+          <div class="order-memo">
+            <span class="order-memo-label">♡ your item</span>
+            ${escapeHtml(o.memo)}
+          </div>
+        ` : ''}
+
+        <div class="order-dates">
+          <div class="date-item">
+            <span class="date-label">order date</span>
+            <div class="date-value">${o.orderDate || '—'}</div>
+          </div>
+          <div class="date-item">
+            <span class="date-label">${shipLabel}</span>
+            <div class="date-value highlight">${o.shipDate || '—'}</div>
+          </div>
+        </div>
+      `;
+
+      list.appendChild(card);
+    });
+
+    result.classList.add('show');
+    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  btnCheck.addEventListener('click', checkOrder);
+
+  nameInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkOrder();
+  });
+
+  loadProgress();
+  loadMonths();
+</script>
+
+</body>
+</html>
